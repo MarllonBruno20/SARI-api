@@ -18,7 +18,48 @@ model Usuario {
   nome String
   email String @unique
   senha String
-  data_nascimento DateTime
+  dataNascimento DateTime
+  status String    @default("ativo")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  prescricoes Prescricao[]
+}
+
+model Remedio {
+  id Int @id @default(autoincrement())
+  nome String
+  funcao String
+  dosagem String
+  status String @default("ativo")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  prescricoes Prescricao[]
+}
+
+model Prescricao {
+  id Int @id @default(autoincrement())
+  usuarioId Int
+  remedioId Int
+  observacao String?
+  frequencia Int
+  dataInicio DateTime
+  dataFim DateTime
+  status String @default("ativo")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  remedio Remedio @relation(fields: [remedioId], references: [id])
+  historicos Historico[]
+}
+
+model Historico {
+  id Int @id @default(autoincrement())
+  prescricaoId Int
+  dataAtual DateTime
+  status String @default("ativo")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  prescricao Prescricao @relation(fields: [prescricaoId], references: [id])
 }
