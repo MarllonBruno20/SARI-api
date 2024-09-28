@@ -3,10 +3,6 @@ const prisma = require("../../prisma/prismaClient");
 const criarUsuario = async (req, res) => {
   const { nome, email, senha, data_nascimento } = req.body;
 
-  if (!nome || !email || !senha || !data_nascimento) {
-    return res.status(400).json({ error: "Todos os campos são obrigatórios." });
-  }
-
   try {
     const novoUsuario = await prisma.usuario.create({
       data: {
@@ -18,12 +14,9 @@ const criarUsuario = async (req, res) => {
     });
     res.status(201).json(novoUsuario);
   } catch (error) {
-    console.error(error);
-    if (error.code === "P2002") {
-      res.status(400).json({ error: "Email já cadastrado." });
-    } else {
-      res.status(500).json({ error: "Erro ao criar usuário." });
-    }
+    res
+      .status(400)
+      .json({ error: "Erro ao criar usuário.", details: error.message });
   }
 };
 

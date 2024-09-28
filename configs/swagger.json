@@ -1,0 +1,565 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sistema de Gerenciamento de Remédios para Idosos",
+    "description": "API para agenda de remédios para pessoas idosas.",
+    "contact": {
+      "email": "marllon.bruno2002@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Api de testes"
+    }
+  ],
+  "paths": {
+    "/api/usuarios/criarUsuario": {
+      "post": {
+        "summary": "Cria um novo usuário.",
+        "description": "Adiciona um novo usuário ao sistema com base nas informações fornecidas.",
+        "tags": ["Usuários"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso."
+          },
+          "400": {
+            "description": "Erro ao criar usuário."
+          }
+        }
+      },
+      "get": {
+        "summary": "Retorna todos os usuários.",
+        "description": "Retorna todos os usuários do sistema.",
+        "tags": ["Usuários"],
+        "responses": {
+          "200": {
+            "description": "Todos os usuários retornados com sucesso."
+          },
+          "400": {
+            "description": "Erro ao buscar usuários."
+          }
+        }
+      }
+    },
+    "/api/usuarios/ativos": {
+      "get": {
+        "summary": "Retorna todos os usuários ativos.",
+        "description": "Retorna todos os usuários ativos do sistema.",
+        "tags": ["Usuários"],
+        "responses": {
+          "200": {
+            "description": "Todos os usuários retornados com sucesso."
+          },
+          "400": {
+            "description": "Erro ao buscar usuários."
+          }
+        }
+      }
+    },
+    "/api/usuarios/{id}": {
+      "put": {
+        "summary": "Atualiza um usuário.",
+        "description": "Atualiza as informações de um usuário com base no seu id.",
+        "tags": ["Usuários"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso."
+          },
+          "400": {
+            "description": "Erro ao atualizar usuário."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove um usuário.",
+        "description": "Remove um usuário do sistema com base no seu id.",
+        "tags": ["Usuários"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário removido com sucesso."
+          },
+          "400": {
+            "description": "Erro ao remover usuário."
+          }
+        }
+      }
+    },
+    "/api/remedios/criar": {
+      "post": {
+        "summary": "Cria um novo remédio.",
+        "description": "Adiciona um novo remédio ao sistema com base nas informações fornecidas.",
+        "tags": ["Remedios"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Medicine"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Remédio criado com sucesso."
+          },
+          "400": {
+            "description": "Erro ao criar remédio."
+          }
+        }
+      }
+    },
+    "/api/remedios/{id}": {
+      "put": {
+        "summary": "Atualiza um remédio.",
+        "description": "Atualiza as informações de um remédio com base no seu id.",
+        "tags": ["Remedios"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Medicine"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Remédio atualizado com sucesso."
+          },
+          "400": {
+            "description": "Erro ao atualizar remédio."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove um remédio.",
+        "description": "Remove um remédio do sistema com base no seu id.",
+        "tags": ["Remedios"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Remédio removido com sucesso."
+          },
+          "400": {
+            "description": "Erro ao remover remédio."
+          }
+        }
+      }
+    },
+    "/api/remedios": {
+      "get": {
+        "summary": "Retorna todos os remedios.",
+        "description": "Retorna todos os remedios do sistema.",
+        "tags": ["Remedios"],
+        "responses": {
+          "200": {
+            "description": "Todos os remedios retornados com sucesso."
+          },
+          "400": {
+            "description": "Erro ao buscar remedios."
+          }
+        }
+      }
+    },
+    "/api/remedios/ativos": {
+      "get": {
+        "summary": "Retorna todos os remedios ativos.",
+        "description": "Retorna todos os remedios ativos do sistema.",
+        "tags": ["Remedios"],
+        "responses": {
+          "200": {
+            "description": "Todos os remedios retornados com sucesso."
+          },
+          "400": {
+            "description": "Erro ao buscar remedios."
+          }
+        }
+      }
+    },
+    "/api/prescricoes/criar": {
+      "post": {
+        "summary": "Cria uma nova prescrição.",
+        "description": "Adiciona uma nova prescricao ao sistema com base nas informações fornecidas.",
+        "tags": ["Prescricoes"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prescription"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Prescrição criada com sucesso."
+          },
+          "400": {
+            "description": "Erro ao criar prescricão."
+          }
+        }
+      }
+    },
+    "/api/prescricoes": {
+      "get": {
+        "summary": "Retorna todas as prescricoes.",
+        "description": "Retorna todas as prescricoes do sistema.",
+        "tags": ["Prescricoes"],
+        "responses": {
+          "200": {
+            "description": "Todas as prescricoes retornadas com sucesso."
+          },
+          "400": {
+            "description": "Erro ao buscar prescricoes."
+          }
+        }
+      }
+    },
+    "/api/prescricoes/{id}": {
+      "delete": {
+        "summary": "Remove uma prescricão.",
+        "description": "Remove uma prescricão do sistema com base no seu id.",
+        "tags": ["Prescricoes"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prescricão removida com sucesso."
+          },
+          "400": {
+            "description": "Erro ao remover prescricão."
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza uma prescricao.",
+        "description": "Atualiza as informações de uma prescricao com base no seu id.",
+        "tags": ["Prescricoes"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Prescription"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prescricao atualizada com sucesso."
+          },
+          "400": {
+            "description": "Erro ao atualizar prescricao."
+          }
+        }
+      },
+      "get": {
+        "summary": "Retorna uma prescricao baseado no id do usuário.",
+        "description": "Retorna uma prescricao baseado no id do usuário.",
+        "tags": ["Prescricoes"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prescricao retornada com sucesso."
+          },
+          "400": {
+            "description": "Erro ao buscar prescricao."
+          }
+        }
+      }
+    },
+    "/api/prescricoes/ativas": {
+      "get": {
+        "summary": "Retorna todas as prescricoes ativas.",
+        "description": "Retorna todas as prescricoes ativas do sistema.",
+        "tags": ["Prescricoes"],
+        "responses": {
+          "200": {
+            "description": "Todas as prescricoes retornadas com sucesso."
+          },
+          "400": {
+            "description": "Erro ao buscar prescricoes."
+          }
+        }
+      }
+    },
+    "/api/historicos/criar": {
+      "post": {
+        "summary": "Cria um novo historico.",
+        "description": "Adiciona um novo historico ao sistema com base nas informações fornecidas.",
+        "tags": ["Historicos"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/History"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Historico criado com sucesso."
+          },
+          "400": {
+            "description": "Erro ao criar historico."
+          }
+        }
+      }
+    },
+    "/api/historicos": {
+      "get": {
+        "summary": "Retorna todos os historicos.",
+        "description": "Retorna todos os historicos do sistema.",
+        "tags": ["Historicos"],
+        "responses": {
+          "200": {
+            "description": "Todos os historicos retornados com sucesso."
+          },
+          "400": {
+            "description": "Erro ao buscar historicos."
+          }
+        }
+      }
+    },
+    "/api/historicos/{id}": {
+      "put": {
+        "summary": "Atualiza um historico.",
+        "description": "Atualiza as informações de um historico com base no seu id.",
+        "tags": ["Historicos"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/History"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Historico atualizado com sucesso."
+          },
+          "400": {
+            "description": "Erro ao atualizar historico."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta um historico.",
+        "description": "Deleta um historico do sistema com base no seu id.",
+        "tags": ["Historicos"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Historico deletado com sucesso."
+          },
+          "400": {
+            "description": "Erro ao deletar historico."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome do novo usuário"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email do novo usuário"
+          },
+          "senha": {
+            "type": "string",
+            "description": "Senha do novo usuário"
+          },
+          "data_nascimento": {
+            "type": "string",
+            "description": "Data de nascimento do novo usuário",
+            "format": "date"
+          }
+        }
+      },
+      "Medicine": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome do remédio."
+          },
+          "funcao": {
+            "type": "string",
+            "description": "Função do remédio."
+          },
+          "dosagem": {
+            "type": "string",
+            "description": "Dosagem do remédio."
+          }
+        }
+      },
+      "Prescription": {
+        "type": "object",
+        "properties": {
+          "usuario_id": {
+            "type": "integer",
+            "description": "ID do usuário."
+          },
+          "remedio_id": {
+            "type": "integer",
+            "description": "ID do remédio."
+          },
+          "observacao": {
+            "type": "string",
+            "description": "Observação relacionado ao modo de tomar remédio."
+          },
+          "frequencia": {
+            "type": "integer",
+            "description": "Frequência de tomar remédio."
+          },
+          "dataInicio": {
+            "type": "string",
+            "description": "Data de inicio da prescricao.",
+            "format": "date"
+          },
+          "dataFim": {
+            "type": "string",
+            "description": "Data de fim da prescricao.",
+            "format": "date"
+          }
+        }
+      },
+      "History": {
+        "type": "object",
+        "properties": {
+          "prescricaoId": {
+            "type": "integer",
+            "description": "ID da prescricao."
+          },
+          "dataAtual": {
+            "type": "string",
+            "description": "Data da prescricao.",
+            "format": "date"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,8 @@
 const express = require("express");
+
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocs = require("./configs/swagger.json");
+
 const usuarioRoutes = require("./src/routes/usuarios");
 const remedioRoutes = require("./src/routes/remedios");
 const prescricaoRoutes = require("./src/routes/prescricoes");
@@ -6,6 +10,8 @@ const historicoRoutes = require("./src/routes/historicos");
 
 const app = express();
 app.use(express.json());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use("/api", usuarioRoutes);
 

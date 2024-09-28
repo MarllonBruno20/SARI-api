@@ -39,7 +39,9 @@ const obterHistoricos = async (req, res) => {
     const historicos = await prisma.historico.findMany();
     res.status(200).json(historicos);
   } catch (error) {
-    res.status(500).json({ error: "Erro ao obter históricos." });
+    res
+      .status(500)
+      .json({ error: "Erro ao obter históricos.", details: error.message });
   }
 };
 

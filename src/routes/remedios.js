@@ -10,7 +10,7 @@ const {
 
 const router = express.Router();
 
-router.post("/remedios", criarRemedio);
+router.post("/remedios/criar", criarRemedio);
 
 router.put("/remedios/:id", atualizarRemedio);
 

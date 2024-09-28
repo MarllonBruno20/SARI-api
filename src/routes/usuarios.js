@@ -10,7 +10,7 @@ const {
 
 const router = express.Router();
 
-router.post("/usuarios", criarUsuario);
+router.post("/usuarios/criarUsuario", criarUsuario);
 
 router.put("/usuarios/:id", atualizarUsuario);
 

@@ -27,7 +27,9 @@ const criarPrescricao = async (req, res) => {
     });
     res.status(201).json(novaPrescricao);
   } catch (error) {
-    res.status(400).json({ error: "Erro ao criar prescrição." });
+    res
+      .status(400)
+      .json({ error: "Erro ao criar prescrição.", details: error.message });
   }
 };
 

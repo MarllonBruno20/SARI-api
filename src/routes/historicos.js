@@ -9,7 +9,7 @@ const {
 
 const router = express.Router();
 
-router.post("/historicos", criarHistorico);
+router.post("/historicos/criar", criarHistorico);
 
 router.put("/historicos/:id", atualizarHistorico);
 

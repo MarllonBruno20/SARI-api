@@ -11,7 +11,7 @@ const {
 
 const router = express.Router();
 
-router.post("/prescricoes", criarPrescricao);
+router.post("/prescricoes/criar", criarPrescricao);
 
 router.get("/prescricoes", obterPrescricoes);
 

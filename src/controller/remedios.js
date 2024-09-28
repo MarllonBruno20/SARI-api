@@ -17,7 +17,9 @@ const criarRemedio = async (req, res) => {
     });
     res.status(201).json(novoRemedio);
   } catch (error) {
-    res.status(400).json({ error: "Erro ao criar remédio." });
+    res
+      .status(400)
+      .json({ error: "Erro ao criar remédio.", details: error.message });
   }
 };
 
