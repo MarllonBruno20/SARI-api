@@ -6,18 +6,25 @@ const {
   excluirUsuario,
   obterUsuariosAtivos,
   obterUsuarios,
+  loginUsuario,
+  autenticarToken,
+  logout,
 } = require("../controller/usuarios");
 
 const router = express.Router();
 
 router.post("/usuarios/criarUsuario", criarUsuario);
 
-router.put("/usuarios/:id", atualizarUsuario);
+router.post("/login", loginUsuario);
 
-router.delete("/usuarios/:id", excluirUsuario);
+router.post("/logout", autenticarToken, logout);
 
-router.get("/usuarios/ativos", obterUsuariosAtivos);
+router.put("/usuarios/:id", autenticarToken, atualizarUsuario);
 
-router.get("/usuarios", obterUsuarios);
+router.delete("/usuarios/:id", autenticarToken, excluirUsuario);
+
+router.get("/usuarios/ativos", autenticarToken, obterUsuariosAtivos);
+
+router.get("/usuarios", autenticarToken, obterUsuarios);
 
 module.exports = router;

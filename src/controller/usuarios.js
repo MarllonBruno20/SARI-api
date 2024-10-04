@@ -1,14 +1,20 @@
+const bcrypt = require("bcrypt");
+
+const jwtConfig = require("../../configs/jwtConfig");
+
 const prisma = require("../../prisma/prismaClient");
 
 const criarUsuario = async (req, res) => {
   const { nome, email, senha, data_nascimento } = req.body;
+
+  const senhaCriptograda = await bcrypt.hash(senha, 10);
 
   try {
     const novoUsuario = await prisma.usuario.create({
       data: {
         nome,
         email,
-        senha,
+        senha: senhaCriptograda,
         dataNascimento: new Date(data_nascimento),
       },
     });
@@ -17,6 +23,58 @@ const criarUsuario = async (req, res) => {
     res
       .status(400)
       .json({ error: "Erro ao criar usuário.", details: error.message });
+  }
+};
+
+const loginUsuario = async (req, res) => {
+  const { email, senha } = req.body;
+  try {
+    const usuario = await prisma.usuario.findUnique({ where: { email } });
+
+    if (!usuario || !(await bcrypt.compare(senha, usuario.senha))) {
+      return res.status(401).json({ error: "Credenciais inválidas." });
+    }
+
+    const token = jwtConfig.generateToken({ id: usuario.id });
+
+    res.status(200).json({ token });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ error: "Erro ao fazer login.", details: error.message });
+  }
+};
+
+const autenticarToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Usamos essa quebra pq normalmente usamos "Baerer XXX"
+
+  if (!token) {
+    return res.status(401).json({ error: "Token não fornecido." });
+  }
+
+  try {
+    const user = jwtConfig.verifyToken(token);
+    req.user = user;
+    next();
+  } catch (error) {
+    return res
+      .status(403)
+      .json({ error: "Token inválido.", details: error.message });
+  }
+};
+
+const logout = async (req, res) => {
+  try {
+    const token = req.headers["authorization"].split(" ")[1];
+
+    jwtConfig.blacklistToken(token);
+
+    res.status(200).json({ message: "Logout realizado com sucesso." });
+  } catch (error) {
+    res
+      .status(400)
+      .json({ error: "Erro ao realizar logout.", details: error.message });
   }
 };
 
@@ -78,4 +136,7 @@ module.exports = {
   excluirUsuario,
   obterUsuariosAtivos,
   obterUsuarios,
+  loginUsuario,
+  autenticarToken,
+  logout,
 };
