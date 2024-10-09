@@ -9,6 +9,7 @@ const {
   loginUsuario,
   autenticarToken,
   logout,
+  obterInformacoesUsuario,
 } = require("../controller/usuarios");
 
 const router = express.Router();
@@ -26,5 +27,7 @@ router.delete("/usuarios/:id", autenticarToken, excluirUsuario);
 router.get("/usuarios/ativos", autenticarToken, obterUsuariosAtivos);
 
 router.get("/usuarios", autenticarToken, obterUsuarios);
+
+router.get("/usuarios/:id", autenticarToken, obterInformacoesUsuario);
 
 module.exports = router;

@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwtConfig = require("../../configs/jwtConfig");
 
 const prisma = require("../../prisma/prismaClient");
+const { redisClient } = require("../../configs/redis/redis.js");
+const { response } = require("express");
 
 const criarUsuario = async (req, res) => {
   const { nome, email, senha, data_nascimento } = req.body;
@@ -37,6 +39,8 @@ const loginUsuario = async (req, res) => {
 
     const token = jwtConfig.generateToken({ id: usuario.id });
 
+    await redisClient.set(`user-${usuario.id}`, JSON.stringify(usuario));
+
     res.status(200).json({ token });
   } catch (error) {
     res
@@ -45,7 +49,7 @@ const loginUsuario = async (req, res) => {
   }
 };
 
-const autenticarToken = (req, res, next) => {
+const autenticarToken = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1]; // Usamos essa quebra pq normalmente usamos "Baerer XXX"
 
@@ -55,6 +59,13 @@ const autenticarToken = (req, res, next) => {
 
   try {
     const user = jwtConfig.verifyToken(token);
+
+    const redisToken = await redisClient.get(`user-${user.id}`);
+
+    if (!redisToken) {
+      return res.status(403).json({ error: "Token expirado ou inválido." });
+    }
+
     req.user = user;
     next();
   } catch (error) {
@@ -119,6 +130,15 @@ const obterUsuarios = async (req, res) => {
   }
 };
 
+const obterInformacoesUsuario = async (req, res) => {
+  const { id } = req.params;
+
+  const usuarioRedis = await redisClient.get(`user-${id}`);
+  const usuario = JSON.parse(usuarioRedis);
+
+  return res.json(usuario);
+};
+
 const obterUsuariosAtivos = async (req, res) => {
   try {
     const usuariosAtivos = await prisma.usuario.findMany({
@@ -139,4 +159,5 @@ module.exports = {
   loginUsuario,
   autenticarToken,
   logout,
+  obterInformacoesUsuario,
 };
