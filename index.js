@@ -3,7 +3,7 @@ const express = require("express");
 const env = require("dotenv").config();
 
 const swaggerUi = require("swagger-ui-express");
-const swaggerDocs = require("./configs/swagger.json");
+const swaggerDocs = require("./configs/swagger/swagger.json");
 
 const usuarioRoutes = require("./src/routes/usuarios");
 const remedioRoutes = require("./src/routes/remedios");

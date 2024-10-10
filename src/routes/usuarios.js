@@ -1,5 +1,9 @@
 const express = require("express");
 
+const { autenticarToken } = require("../middleware/authentication");
+
+const { verificarPermissao } = require("../middleware/authorization");
+
 const {
   criarUsuario,
   atualizarUsuario,
@@ -7,7 +11,6 @@ const {
   obterUsuariosAtivos,
   obterUsuarios,
   loginUsuario,
-  autenticarToken,
   logout,
   obterInformacoesUsuario,
 } = require("../controller/usuarios");
@@ -24,7 +27,12 @@ router.put("/usuarios/:id", autenticarToken, atualizarUsuario);
 
 router.delete("/usuarios/:id", autenticarToken, excluirUsuario);
 
-router.get("/usuarios/ativos", autenticarToken, obterUsuariosAtivos);
+router.get(
+  "/usuarios/ativos",
+  autenticarToken,
+  verificarPermissao(["administrador"]),
+  obterUsuariosAtivos
+);
 
 router.get("/usuarios", autenticarToken, obterUsuarios);
 

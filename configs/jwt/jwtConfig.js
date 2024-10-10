@@ -2,8 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const blacklist = [];
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.SECRET_JWT, {
+const generateToken = (id, tipoUsuario) => {
+  return jwt.sign({ id, tipoUsuario }, process.env.SECRET_JWT, {
     expiresIn: "1h",
   });
 };

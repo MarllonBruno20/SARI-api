@@ -1,13 +1,12 @@
 const bcrypt = require("bcrypt");
 
-const jwtConfig = require("../../configs/jwtConfig");
+const jwtConfig = require("../../configs/jwt/jwtConfig.js");
 
 const prisma = require("../../prisma/prismaClient");
 const { redisClient } = require("../../configs/redis/redis.js");
-const { response } = require("express");
 
 const criarUsuario = async (req, res) => {
-  const { nome, email, senha, data_nascimento } = req.body;
+  const { nome, email, senha, data_nascimento, tipoUsuario } = req.body;
 
   const senhaCriptograda = await bcrypt.hash(senha, 10);
 
@@ -18,6 +17,7 @@ const criarUsuario = async (req, res) => {
         email,
         senha: senhaCriptograda,
         dataNascimento: new Date(data_nascimento),
+        tipoUsuario: tipoUsuario || "comum",
       },
     });
     res.status(201).json(novoUsuario);
@@ -30,6 +30,7 @@ const criarUsuario = async (req, res) => {
 
 const loginUsuario = async (req, res) => {
   const { email, senha } = req.body;
+
   try {
     const usuario = await prisma.usuario.findUnique({ where: { email } });
 
@@ -37,9 +38,18 @@ const loginUsuario = async (req, res) => {
       return res.status(401).json({ error: "Credenciais inválidas." });
     }
 
-    const token = jwtConfig.generateToken({ id: usuario.id });
+    const token = jwtConfig.generateToken({
+      id: usuario.id,
+      tipoUsuario: usuario.tipoUsuario,
+    });
 
-    await redisClient.set(`user-${usuario.id}`, JSON.stringify(usuario));
+    const usuarioDados = {
+      id: usuario.id,
+      tipoUsuario: usuario.tipoUsuario,
+      token: token,
+    };
+
+    await redisClient.set(`user-${usuario.id}`, JSON.stringify(usuarioDados));
 
     res.status(200).json({ token });
   } catch (error) {
@@ -49,35 +59,12 @@ const loginUsuario = async (req, res) => {
   }
 };
 
-const autenticarToken = async (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // Usamos essa quebra pq normalmente usamos "Baerer XXX"
-
-  if (!token) {
-    return res.status(401).json({ error: "Token não fornecido." });
-  }
-
-  try {
-    const user = jwtConfig.verifyToken(token);
-
-    const redisToken = await redisClient.get(`user-${user.id}`);
-
-    if (!redisToken) {
-      return res.status(403).json({ error: "Token expirado ou inválido." });
-    }
-
-    req.user = user;
-    next();
-  } catch (error) {
-    return res
-      .status(403)
-      .json({ error: "Token inválido.", details: error.message });
-  }
-};
-
 const logout = async (req, res) => {
   try {
     const token = req.headers["authorization"].split(" ")[1];
+
+    const user = jwtConfig.verifyToken(token);
+    await redisClient.del(`user-${user.id.id}`);
 
     jwtConfig.blacklistToken(token);
 
@@ -157,7 +144,6 @@ module.exports = {
   obterUsuariosAtivos,
   obterUsuarios,
   loginUsuario,
-  autenticarToken,
   logout,
   obterInformacoesUsuario,
 };
