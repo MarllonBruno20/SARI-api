@@ -1,17 +1,21 @@
 const express = require("express");
-
+const cors = require("cors");
 const env = require("dotenv").config();
-
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocs = require("./configs/swagger/swagger.json");
+
+const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
+app.use(express.json());
 
 const usuarioRoutes = require("./src/routes/usuarios");
 const remedioRoutes = require("./src/routes/remedios");
 const prescricaoRoutes = require("./src/routes/prescricoes");
 const historicoRoutes = require("./src/routes/historicos");
-
-const app = express();
-app.use(express.json());
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 

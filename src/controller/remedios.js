@@ -53,10 +53,16 @@ const obterRemedios = async (req, res) => {
 
 const obterRemediosAtivos = async (req, res) => {
   try {
-    const remediosAtivos = await prisma.remedio.findMany({
+    const remedios = await prisma.remedio.findMany({
       where: { status: "ativo" },
+      select: {
+        id: true,
+        nome: true,
+        funcao: true,
+        dosagem: true,
+      },
     });
-    res.status(200).json(remediosAtivos);
+    res.status(200).json(remedios);
   } catch (error) {
     res.status(400).json({ error: "Erro ao buscar remédios." });
   }

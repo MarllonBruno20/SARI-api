@@ -4,7 +4,7 @@ const blacklist = [];
 
 const generateToken = (id, tipoUsuario) => {
   return jwt.sign({ id, tipoUsuario }, process.env.SECRET_JWT, {
-    expiresIn: "1h",
+    expiresIn: "3h",
   });
 };
 

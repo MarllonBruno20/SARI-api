@@ -1,5 +1,6 @@
 const jwtConfig = require("../../configs/jwt/jwtConfig.js");
 const { redisClient } = require("../../configs/redis/redis.js");
+const prisma = require("../../prisma/prismaClient.js");
 
 const autenticarToken = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -11,18 +12,11 @@ const autenticarToken = async (req, res, next) => {
 
   try {
     const user = jwtConfig.verifyToken(token);
+    const userId = user.id.id;
 
-    const usuarioDados = await redisClient.get(`user-${user.id.id}`);
+    const usuario = await prisma.usuario.findUnique({ where: { id: userId } });
 
-    if (!usuarioDados) {
-      return res.status(401).json({ error: "Token expirado ou inválido." });
-    }
-
-    const usuario = JSON.parse(usuarioDados);
-
-    if (usuario.token !== token) {
-      return res.status(401).json({ error: "Token expirado ou inválido." });
-    }
+    const { nome, email } = usuario;
 
     req.user = usuario;
     next();

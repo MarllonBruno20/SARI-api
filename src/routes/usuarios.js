@@ -36,6 +36,6 @@ router.get(
 
 router.get("/usuarios", autenticarToken, obterUsuarios);
 
-router.get("/usuarios/:id", autenticarToken, obterInformacoesUsuario);
+router.get("/usuario", autenticarToken, obterInformacoesUsuario);
 
 module.exports = router;

@@ -1,5 +1,9 @@
 const express = require("express");
 
+const { autenticarToken } = require("../middleware/authentication");
+
+const { verificarPermissao } = require("../middleware/authorization");
+
 const {
   criarRemedio,
   atualizarRemedio,
@@ -10,14 +14,14 @@ const {
 
 const router = express.Router();
 
-router.post("/remedios/criar", criarRemedio);
+router.post("/remedios/criar", autenticarToken, criarRemedio);
 
-router.put("/remedios/:id", atualizarRemedio);
+router.put("/remedios/:id", autenticarToken, atualizarRemedio);
 
-router.delete("/remedios/:id", excluirRemedio);
+router.delete("/remedios/:id", autenticarToken, excluirRemedio);
 
-router.get("/remedios", obterRemedios);
+router.get("/remedios", autenticarToken, obterRemedios);
 
-router.get("/remedios/ativos", obterRemediosAtivos);
+router.get("/remedios/ativos", autenticarToken, obterRemediosAtivos);
 
 module.exports = router;

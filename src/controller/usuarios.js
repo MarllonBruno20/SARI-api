@@ -6,18 +6,18 @@ const prisma = require("../../prisma/prismaClient");
 const { redisClient } = require("../../configs/redis/redis.js");
 
 const criarUsuario = async (req, res) => {
-  const { nome, email, senha, data_nascimento, tipoUsuario } = req.body;
-
-  const senhaCriptograda = await bcrypt.hash(senha, 10);
-
   try {
+    const { nome, email, senha, data_nascimento } = req.body;
+
+    const senhaCriptograda = await bcrypt.hash(senha, 10);
+
     const novoUsuario = await prisma.usuario.create({
       data: {
         nome,
         email,
         senha: senhaCriptograda,
         dataNascimento: new Date(data_nascimento),
-        tipoUsuario: tipoUsuario || "comum",
+        tipoUsuario: "comum",
       },
     });
     res.status(201).json(novoUsuario);
@@ -118,12 +118,9 @@ const obterUsuarios = async (req, res) => {
 };
 
 const obterInformacoesUsuario = async (req, res) => {
-  const { id } = req.params;
+  const { nome, email } = req.user; // Acessa o id, nome e email do usuário
 
-  const usuarioRedis = await redisClient.get(`user-${id}`);
-  const usuario = JSON.parse(usuarioRedis);
-
-  return res.json(usuario);
+  return res.json({ nome, email });
 };
 
 const obterUsuariosAtivos = async (req, res) => {
